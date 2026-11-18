@@ -54,20 +54,22 @@ export async function generateCaptions(prompt: string, platform: string, tone: s
     },
   });
 
+  // Two passes over the models, with a short pause, to ride out brief overload spikes.
   let res: Response | null = null;
-  for (const model of MODELS) {
+  for (const [attempt, model] of [...MODELS, ...MODELS].entries()) {
+    if (attempt === MODELS.length) await new Promise((r) => setTimeout(r, 1500));
     try {
       res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-goog-api-key": process.env.GEMINI_API_KEY! },
         body: request,
-        signal: AbortSignal.timeout(20_000),
+        signal: AbortSignal.timeout(15_000),
       });
     } catch {
       res = null; // timeout or network error: try the next model
       continue;
     }
-    if (res.status !== 503 && res.status !== 429 && res.status !== 404) break;
+    if (![404, 429, 500, 503].includes(res.status)) break;
     console.warn("Gemini model unavailable, trying next", model, res.status);
   }
 
