@@ -23,7 +23,6 @@ async function startSession() {
   });
   if (!res.ok) throw new Error("session");
   // Full navigation so the protected page loads fresh with the new session cookie.
-   
   window.location.replace("/app");
 }
 
