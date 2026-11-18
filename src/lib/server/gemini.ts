@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { Caption } from "@/lib/schemas";
 import { HttpError } from "./http";
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 
 const PLATFORM_HINTS: Record<string, string> = {
   instagram: "Instagram (up to 2200 characters, emoji friendly, 5-10 hashtags)",
@@ -38,16 +38,18 @@ export async function generateCaptions(prompt: string, platform: string, tone: s
           generationConfig: {
             temperature: 0.9,
             responseMimeType: "application/json",
-            responseSchema: {
-              type: "OBJECT",
+            // Low thinking keeps responses fast (~5-8s) for short creative text.
+            thinkingConfig: { thinkingLevel: "low" },
+            responseJsonSchema: {
+              type: "object",
               properties: {
                 captions: {
-                  type: "ARRAY",
+                  type: "array",
                   items: {
-                    type: "OBJECT",
+                    type: "object",
                     properties: {
-                      text: { type: "STRING" },
-                      hashtags: { type: "ARRAY", items: { type: "STRING" } },
+                      text: { type: "string" },
+                      hashtags: { type: "array", items: { type: "string" } },
                     },
                     required: ["text", "hashtags"],
                   },
@@ -57,7 +59,7 @@ export async function generateCaptions(prompt: string, platform: string, tone: s
             },
           },
         }),
-        signal: AbortSignal.timeout(25_000),
+        signal: AbortSignal.timeout(30_000),
       },
     );
   } catch {
@@ -71,10 +73,17 @@ export async function generateCaptions(prompt: string, platform: string, tone: s
   }
 
   const body = await res.json();
-  const text: string | undefined = body?.candidates?.[0]?.content?.parts?.[0]?.text;
+  const parts: { text?: string; thought?: boolean }[] = body?.candidates?.[0]?.content?.parts ?? [];
+  const text = parts.find((p) => p.text && !p.thought)?.text;
   if (!text) throw new HttpError(502, "Gemini returned no captions (the topic may be blocked). Try rephrasing.");
 
-  const parsed = responseSchema.safeParse(JSON.parse(text));
+  let raw: unknown;
+  try {
+    raw = JSON.parse(text);
+  } catch {
+    throw new HttpError(502, "Gemini returned an unexpected format. Please retry.");
+  }
+  const parsed = responseSchema.safeParse(raw);
   if (!parsed.success) throw new HttpError(502, "Gemini returned an unexpected format. Please retry.");
 
   return parsed.data.captions.slice(0, 3).map((c) => ({
