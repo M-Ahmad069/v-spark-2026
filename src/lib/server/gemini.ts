@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { Caption } from "@/lib/schemas";
 import { HttpError } from "./http";
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-3.8-flash";
+const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 
 const PLATFORM_HINTS: Record<string, string> = {
   instagram: "Instagram (up to 2200 characters, emoji friendly, 5-10 hashtags)",
@@ -38,8 +38,6 @@ export async function generateCaptions(prompt: string, platform: string, tone: s
           generationConfig: {
             temperature: 0.9,
             responseMimeType: "application/json",
-            // Low thinking keeps responses fast (~5-8s) for short creative text.
-            thinkingConfig: { thinkingLevel: "low" },
             responseJsonSchema: {
               type: "object",
               properties: {
