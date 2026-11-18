@@ -10,7 +10,7 @@ const steps = [
 
 export default function Home() {
   return (
-    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 sm:px-6">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col overflow-x-clip px-4 sm:px-6">
       <header className="flex items-center justify-between py-5">
         <Logo />
         <Link href="/login" className="btn btn-ghost">

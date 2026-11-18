@@ -16,7 +16,7 @@ Built for **V-Spark 2026 — Web Development (1-Hour Challenge)**.
 
 1. **AI caption generator** — describe a post, pick a platform and tone, and Google **Gemini** returns 3 caption options with hashtags.
 2. **Google Drive storage & scheduler** — pick a caption, edit it, choose a date/time, add notes and an optional image, then save. The post is stored in the database **and** synced as a JSON file into a `CaptionFlow Posts` folder in the user's own Google Drive.
-3. **Feed / list preview** — all saved posts with status (Scheduled / Reminder sent), filters, **edit** (caption, hashtags, time, notes) and **delete** (also removes the Drive file and image).
+3. **Feed / list preview** — summary (upcoming, next post, Drive status) and all saved posts with status (Scheduled / Reminder sent), filters, **copy**, **open in Drive**, **edit** (caption, hashtags, time, notes) and **delete** (also removes the Drive file and image). Character counter checks each platform's limit (e.g. 280 for X).
 4. **Email notifications & customization** — an automatic email for every scheduled post. Users choose on/off, recipient address, timing (at the time, 15 min, 1 hour or 1 day before), subject prefix and whether hashtags are included, plus per-post notes. "Send test email" checks delivery instantly.
 5. **Deployment** — live on Vercel.
 
@@ -29,7 +29,8 @@ Built for **V-Spark 2026 — Web Development (1-Hour Challenge)**.
 | Generate captions with Gemini, pick one, schedule, attach image | ![Generate](docs/screenshots/03-generate-and-schedule.png) |
 | Feed with edit / delete and status | ![Feed](docs/screenshots/04-posts-feed.png) |
 | Email notification settings | ![Notifications](docs/screenshots/05-notifications.png) |
-| Mobile (responsive) | ![Mobile](docs/screenshots/06-mobile.png) |
+| Mobile app (responsive) | ![Mobile](docs/screenshots/06-mobile.png) |
+| Mobile landing page | ![Mobile landing](docs/screenshots/07-mobile-landing.png) |
 
 ## Tech stack
 
