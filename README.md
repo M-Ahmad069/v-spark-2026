@@ -1,6 +1,6 @@
 # CaptionFlow — AI Social Media Caption Generator & Scheduler
 
-**Live app:** https://v-spark-2026-beryl.vercel.app
+**Live app:** https://v-spark-2026-beryl.vercel.app (demo was live during the competition; it is now offline because all API keys were revoked after judging — see the screenshots below)
 **GitHub:** https://github.com/M-Ahmad069/v-spark-2026
 
 Built for **V-Spark 2026 — Web Development (1-Hour Challenge)**.
