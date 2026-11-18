@@ -5,12 +5,17 @@
 
 Built for **V-Spark 2026 — Web Development (1-Hour Challenge)**.
 
-| | |
+| Team15 | Name | Registration number |
+|---|---|---|
+| Member 1 | Muhammad Ahmad | SP24-BSE-048 |
+| Member 2 | Nibras | FA24-BSE-097 |
+
+| Link | URL |
 |---|---|
-| Student name | _Muhammad Ahmad_ |
-| Registration number | _<fill in>_ |
-| Team member (if any) | _<fill in>_ |
-| Google Drive location | _<fill in organizer folder link>_ |
+| Live app (Vercel) | https://v-spark-2026-beryl.vercel.app |
+| GitHub repository | https://github.com/M-Ahmad069/v-spark-2026 |
+| Google Drive location | https://drive.google.com/drive/folders/1DfSRAAmgeE47Wup1HZNSk325NrSV5gQY (Team15 / v-spark-2026) |
+| Demo login | `demo@vspark.test` / `Demo12345!` (or "Continue with Google") |
 
 ## What it does
 
