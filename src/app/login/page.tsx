@@ -7,7 +7,6 @@ import {
   updateProfile,
 } from "firebase/auth";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Logo, Spinner } from "@/components/ui";
 import { saveDriveToken } from "@/lib/client/drive-token";
@@ -23,10 +22,12 @@ async function startSession() {
     body: JSON.stringify({ idToken }),
   });
   if (!res.ok) throw new Error("session");
+  // Full navigation so the protected page loads fresh with the new session cookie.
+  // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+  window.location.replace("/app");
 }
 
 export default function LoginPage() {
-  const router = useRouter();
   const [mode, setMode] = useState<Mode>("signin");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -49,7 +50,6 @@ export default function LoginPage() {
         await signInWithEmailAndPassword(auth, email.trim(), password);
       }
       await startSession();
-      router.replace("/app");
     } catch (err) {
       setError(authErrorMessage(err));
       setBusy(null);
@@ -62,7 +62,6 @@ export default function LoginPage() {
     try {
       saveDriveToken(await signInWithPopup(auth, googleProvider()));
       await startSession();
-      router.replace("/app");
     } catch (err) {
       setError(authErrorMessage(err));
       setBusy(null);

@@ -11,6 +11,7 @@ import type { Post } from "@/lib/schemas";
 import { api } from "@/lib/client/api";
 import { clearDriveToken, connectDrive, getDriveToken } from "@/lib/client/drive-token";
 import { auth } from "@/lib/client/firebase";
+import { formatWhen } from "@/lib/client/time";
 
 type Tab = "create" | "posts" | "settings";
 
@@ -73,6 +74,7 @@ function Studio() {
 
   const sorted = posts && [...posts].sort((a, b) => a.scheduledAt.localeCompare(b.scheduledAt));
   const upcoming = posts?.filter((p) => p.status === "scheduled").length ?? 0;
+  const next = sorted?.find((p) => p.status === "scheduled");
 
   return (
     <div className="flex flex-1 flex-col">
@@ -119,6 +121,20 @@ function Studio() {
       </header>
 
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
+        <dl className="mb-6 grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-line bg-line text-sm">
+          <div className="bg-surface p-3 sm:p-4">
+            <dt className="text-xs text-muted">Upcoming</dt>
+            <dd className="mt-1 text-lg font-semibold">{posts ? upcoming : "–"}</dd>
+          </div>
+          <div className="bg-surface p-3 sm:p-4">
+            <dt className="text-xs text-muted">Next post</dt>
+            <dd className="mt-1 truncate font-semibold sm:text-lg">{next ? formatWhen(next.scheduledAt) : "None yet"}</dd>
+          </div>
+          <div className="bg-surface p-3 sm:p-4">
+            <dt className="text-xs text-muted">Google Drive</dt>
+            <dd className={`mt-1 font-semibold sm:text-lg ${drive ? "text-ok" : "text-muted"}`}>{drive ? "Syncing" : "Not connected"}</dd>
+          </div>
+        </dl>
         {tab === "create" && (
           <Composer
             driveConnected={drive}

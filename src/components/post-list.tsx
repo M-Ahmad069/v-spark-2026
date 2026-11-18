@@ -95,6 +95,15 @@ function PostItem({ post, onChange, onDelete }: { post: Post; onChange: Props["o
     }
   }
 
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText([post.caption, post.hashtags.join(" ")].filter(Boolean).join("\n\n"));
+      toast("Caption copied. Paste it into your post.");
+    } catch {
+      toast("Could not copy. Select the text instead.", "error");
+    }
+  }
+
   async function remove() {
     setBusy("delete");
     try {
@@ -115,7 +124,16 @@ function PostItem({ post, onChange, onDelete }: { post: Post; onChange: Props["o
         <span className={`rounded-full px-2.5 py-1 font-medium ${post.status === "notified" ? "bg-ok/15 text-ok" : "bg-accent-soft text-accent"}`}>
           {post.status === "notified" ? "Reminder sent" : "Scheduled"}
         </span>
-        {post.driveFileId && <span className="text-muted">· In Drive</span>}
+        {post.driveFileId && (
+          <a
+            href={`https://drive.google.com/file/d/${encodeURIComponent(post.driveFileId)}/view`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-surface-2 px-2.5 py-1 font-medium text-ok hover:underline"
+          >
+            Open in Drive ↗
+          </a>
+        )}
       </div>
 
       {editing ? (
@@ -163,6 +181,9 @@ function PostItem({ post, onChange, onDelete }: { post: Post; onChange: Props["o
             </>
           ) : (
             <>
+              <button className="btn btn-ghost" onClick={copy}>
+                Copy
+              </button>
               <button className="btn btn-ghost" onClick={() => setEditing(true)}>
                 Edit
               </button>

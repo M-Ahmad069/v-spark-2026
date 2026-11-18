@@ -13,6 +13,14 @@ export const PLATFORM_LABEL: Record<(typeof PLATFORMS)[number], string> = {
   tiktok: "TikTok",
 };
 
+export const PLATFORM_LIMIT: Record<(typeof PLATFORMS)[number], number> = {
+  instagram: 2200,
+  x: 280,
+  linkedin: 3000,
+  facebook: 2200,
+  tiktok: 2200,
+};
+
 export function Composer({ driveConnected, onSaved }: { driveConnected: boolean; onSaved: (p: Post) => void }) {
   const toast = useToast();
   const [prompt, setPrompt] = useState("");
@@ -189,6 +197,11 @@ export function Composer({ driveConnected, onSaved }: { driveConnected: boolean;
             <span className="mb-1 block font-medium">Caption (you can edit it)</span>
             <textarea className="input min-h-28" value={draft} maxLength={2200} onChange={(e) => setDraft(e.target.value)} />
           </label>
+          <CharCount
+            used={draft.length + captions[selected].hashtags.join(" ").length + 1}
+            limit={PLATFORM_LIMIT[platform]}
+            platform={PLATFORM_LABEL[platform]}
+          />
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <label className="block text-sm">
               <span className="mb-1 block font-medium">Post at</span>
@@ -223,5 +236,15 @@ export function Composer({ driveConnected, onSaved }: { driveConnected: boolean;
         </section>
       )}
     </div>
+  );
+}
+
+/** Caption + hashtags length against the platform's limit. */
+export function CharCount({ used, limit, platform }: { used: number; limit: number; platform: string }) {
+  const over = used > limit;
+  return (
+    <p className={`mt-1 text-right text-xs ${over ? "text-danger" : "text-muted"}`} aria-live="polite">
+      {used}/{limit} characters with hashtags{over && ` (too long for ${platform})`}
+    </p>
   );
 }
