@@ -23,7 +23,7 @@ async function startSession() {
   });
   if (!res.ok) throw new Error("session");
   // Full navigation so the protected page loads fresh with the new session cookie.
-  // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+   
   window.location.replace("/app");
 }
 
