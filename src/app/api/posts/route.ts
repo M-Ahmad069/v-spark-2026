@@ -1,6 +1,6 @@
 import { createPostSchema } from "@/lib/schemas";
 import { db, type PostRow } from "@/lib/server/db";
-import { syncPostToDrive } from "@/lib/server/drive";
+import { deleteDriveFile, syncPostToDrive } from "@/lib/server/drive";
 import { HttpError, json, rateLimit, withUser } from "@/lib/server/http";
 import { driveToken, getSettings, toPost } from "@/lib/server/posts";
 
@@ -48,7 +48,12 @@ export const POST = withUser(async (user, req) => {
     try {
       const fileId = await syncPostToDrive(token, row);
       const updated = await db.from("posts").update({ drive_file_id: fileId }).eq("id", row.id).select().single();
-      if (updated.data) row = updated.data as PostRow;
+      if (updated.error) {
+        // Don't leave an untracked file in the user's Drive.
+        await deleteDriveFile(token, fileId).catch(() => {});
+        throw updated.error;
+      }
+      row = updated.data as PostRow;
       driveSynced = true;
     } catch (err) {
       console.error("Drive sync failed", err);

@@ -1,6 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifyIdToken } from "@/lib/server/token";
 
+// Next.js 16 renamed middleware.ts to proxy.ts (export `proxy`):
+// https://nextjs.org/docs/app/api-reference/file-conventions/proxy
 // Protected routes: /app requires a valid, signature-checked Firebase session.
 // API routes verify the token again on every request.
 export async function proxy(request: NextRequest) {

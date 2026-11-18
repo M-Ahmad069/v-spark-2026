@@ -74,6 +74,11 @@ Browser (Next.js client)
 - Cron endpoint protected by a secret (constant-time compare) kept in Supabase Vault; emails are claimed before sending so none are sent twice.
 - Security headers (HSTS, X-Frame-Options, nosniff, Referrer-Policy, Permissions-Policy). No secrets in the repo (`.env*` ignored).
 
+## Known limitations
+
+- Rate limits are kept in memory per server instance (enough for a prototype; a shared store such as Redis would make them global).
+- Drive access tokens last about 1 hour and are not stored server-side, so Drive sync happens when the user saves, edits or deletes a post. The database is always the source of truth.
+
 ## Run locally
 
 ```bash

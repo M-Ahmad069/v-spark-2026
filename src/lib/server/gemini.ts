@@ -3,6 +3,8 @@ import { z } from "zod";
 import type { Caption } from "@/lib/schemas";
 import { HttpError } from "./http";
 
+// Current fast Gemini model (checked against the live ListModels API, ~3s per request).
+// Older ids such as gemini-1.5/2.0/2.5-flash are retired for new API keys.
 const MODEL = process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
 
 const PLATFORM_HINTS: Record<string, string> = {
